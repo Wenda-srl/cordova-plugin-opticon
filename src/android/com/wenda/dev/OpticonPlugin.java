@@ -48,12 +48,12 @@ public class OpticonPlugin extends CordovaPlugin {
 
 	private boolean ignoreStop = false;
 	int i=0;
-	private boolean trigermode = false;
+	private boolean triggermode = false;
 	private boolean serverconnect = false;
 	Handler mHandler;
 	Runnable mRunnable;
 
-	private void initScanner() {
+	private void initScanner(CallbackContext callbackContext) {
 		Context context = this.cordova.getActivity().getApplicationContext();
 		Log.e(TAG, "initScan: XXX");
 		mBarcodeManager = new BarcodeManager(context);
@@ -118,6 +118,14 @@ public class OpticonPlugin extends CordovaPlugin {
 		mBarcodeManager.addListener(mEventListener);
 	}
 
+	private void echo(String message, CallbackContext callbackContext) {
+		if (message != null && message.length() > 0) {
+			callbackContext.success(message);
+		} else {
+			callbackContext.error("Expected one non-empty string argument.");
+		}
+	}
+
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		this.callbackContext = callbackContext;
@@ -132,13 +140,5 @@ public class OpticonPlugin extends CordovaPlugin {
 			return true;
 		}
 		return false;
-	}
-
-	private void echo(String message, CallbackContext callbackContext) {
-		if (message != null && message.length() > 0) {
-			callbackContext.success(message);
-		} else {
-			callbackContext.error("Expected one non-empty string argument.");
-		}
 	}
 }
