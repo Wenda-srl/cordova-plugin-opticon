@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin 
+    id="cordova-plugin-opticon" 
+    version="0.0.1" 
+    xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <description>Apache Cordova Plugin for Opticon H-28</description>
+    <license>Apache-2.0</license>
+
+    <name>OpticonCordovaPlugin</name>
+    <js-module name="OpticonCordovaPlugin" src="www/OpticonCordovaPlugin.js">
+        <clobbers target="OpticonCordovaPlugin" />
+    </js-module>
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="OpticonCordovaPlugin">
+                <param name="android-package" value="com.wenda.dev.OpticonPlugin" />
+            </feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml">
+        </config-file>
+        <source-file src="src/android/com/wenda/dev/OpticonPlugin.java" target-dir="src/com/wenda/dev/OpticonPlugin" />
+        <source-file src="src/android/scannersdk-ext.jar" target-dir="libs"/>
+    </platform>
+</plugin>

@@ -1,0 +1,17 @@
+{
+  "name": "cordova-plugin-opticon",
+  "version": "0.0.1",
+  "description": "Apache Cordova Plugin for Opticon H-28",
+  "cordova": {
+    "id": "cordova-plugin-opticon",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Valentina Protti",
+  "license": "Apache-2.0"
+}
