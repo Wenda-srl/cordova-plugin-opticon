@@ -135,7 +135,7 @@ public class OpticonPlugin extends CordovaPlugin {
 			return true;
 		}
 		if (action.equals("initOpticon")) {
-			this.initScanner();
+			this.initScanner(callbackContext);
 			Log.e(TAG, "Initialised opticon handscanner API");
 			return true;
 		}
