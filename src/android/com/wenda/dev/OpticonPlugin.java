@@ -117,6 +117,7 @@ public class OpticonPlugin extends CordovaPlugin {
 			};
 
 			mBarcodeManager.addListener(mEventListener);
+			callbackContext.success("Scanner initialized!");
 		}
 		catch (Exception ex) {
             callbackContext.error("Something went wrong: " + ex);
@@ -126,7 +127,7 @@ public class OpticonPlugin extends CordovaPlugin {
 	private void echo(String message, CallbackContext callbackContext) {
 		if (message != null && message.length() > 0) {
 			try {
-				callbackContext.success(message);
+				callbackContext.success("Ciao, " + message);
             }
             catch (Exception ex) {
                 callbackContext.error("Something went wrong: " + ex);
