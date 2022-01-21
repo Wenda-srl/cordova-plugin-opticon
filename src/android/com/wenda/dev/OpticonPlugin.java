@@ -243,7 +243,7 @@ public class OpticonPlugin extends CordovaPlugin {
 
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-		// this.callbackContext = callbackContext;
+		this.callbackContext = callbackContext;
 		if (action.equals("echo")) {
 			String message = args.getString(0);
 			this.echo(message, callbackContext);
