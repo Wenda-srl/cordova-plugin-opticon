@@ -135,7 +135,7 @@ public class OpticonPlugin extends CordovaPlugin {
 			callbackContext.success("Scanner initialized!");
 		}
 		catch (Exception ex) {
-            callbackContext.error("Something went wrong: " + ex);
+            callbackContext.error("Something went wrong with initScanner: " + ex);
         }
 	}
 
@@ -146,9 +146,6 @@ public class OpticonPlugin extends CordovaPlugin {
 		else {
 			try {
 				if (serverconnect) {
-					isPreviewMode = false;
-					isPreviewStart = false;
-					
 					mBarcodeManager.takeSnapshot(1, 8, 1, 100);
 					// void takeSnapshot(int subSampling, int bitPerPixel, int imageType, int jpegQuality);
 					// Parameters
@@ -158,6 +155,7 @@ public class OpticonPlugin extends CordovaPlugin {
 					callbackContext.success("Snapshot taken");
 				}
 			} catch (Exception e) {
+				callbackContext.error("Something went wrong with takeSnapshot: " + e);
 			}
 		}
 	}
@@ -169,13 +167,11 @@ public class OpticonPlugin extends CordovaPlugin {
 		else {
 			try {
 				if (serverconnect) {
-					isPreviewMode = false;
-					isPreviewStart = false;
-					
 					mBarcodeManager.startDecode();
 					callbackContext.success("Decode started");
 				}
 			} catch (Exception e) {
+            	callbackContext.error("Something went wrong with startDecode: " + e);
 			}
 		}
 	}
@@ -191,6 +187,7 @@ public class OpticonPlugin extends CordovaPlugin {
 					callbackContext.success("Decode stopped");
 				}
 			} catch (Exception e) {
+            	callbackContext.error("Something went wrong with stopDecode: " + e);
 			}
 		}
 	}
@@ -202,12 +199,11 @@ public class OpticonPlugin extends CordovaPlugin {
 		else {
 			try {
 				if (serverconnect) {
-					isPreviewMode = false;
-					isPreviewStart = false;	
 					mBarcodeManager.startTrigger();
 					callbackContext.success("Trigger started");
 				}
 			} catch (Exception e) {
+            	callbackContext.error("Something went wrong with startTrigger: " + e);
 			}
 		}
 	}
@@ -223,6 +219,7 @@ public class OpticonPlugin extends CordovaPlugin {
 					callbackContext.success("Trigger stopped");
 				}
 			} catch (Exception e) {
+            	callbackContext.error("Something went wrong with stopTrigger: " + e);
 			}
 		}
 	}
