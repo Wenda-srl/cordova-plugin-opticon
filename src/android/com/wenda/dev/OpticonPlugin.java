@@ -4,7 +4,7 @@ import com.extbcr.scannersdk.BarcodeManager;
 import com.extbcr.scannersdk.EventListener;
 import com.extbcr.scannersdk.CodeID;
 import com.extbcr.scannersdk.BarcodeData;
-import com.extbcr.scannersdk.BarcodeDataEx;
+// import com.extbcr.scannersdk.BarcodeDataEx;
 import com.extbcr.scannersdk.AllSettings;
 import com.extbcr.scannersdk.PropertyID;
 
