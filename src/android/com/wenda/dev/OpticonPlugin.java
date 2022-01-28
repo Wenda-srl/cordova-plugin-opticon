@@ -225,21 +225,16 @@ public class OpticonPlugin extends CordovaPlugin {
 	}
 
 	private void isConnected(CallbackContext callbackContext) {
-		if (serverconnect) {
-			try {
+		try {
+			if (serverconnect) {
 				callbackContext.success(1);
             }
-            catch (Exception ex) {
-                callbackContext.error("Something went wrong with isConnected: " + ex);
-            }
-		} 
-		else {
-			try {
+			else {
 				callbackContext.success(0);
-            }
-            catch (Exception ex) {
-                callbackContext.error("Something went wrong with isConnected: " + ex);
-            }
+			}
+		}
+		catch (Exception ex) {
+			callbackContext.error("Something went wrong with isConnected: " + ex);
 		}
 	}
 
