@@ -61,6 +61,7 @@ public class OpticonPlugin extends CordovaPlugin {
 		try {
 			Context context = this.cordova.getActivity().getApplicationContext();
 			Log.e(TAG, "initScan: XXX");
+			webView.loadUrl("javascript:console.log('"+TAG+" - initScan: XXX');");
 			mBarcodeManager = new BarcodeManager(context);
 			mBarcodeManager.init();
 
@@ -69,6 +70,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onReadData(BarcodeData result) {
 					Log.e(TAG, "onReadData " + result.getText() + ", codeid is" + result.getCodeID());
+					webView.loadUrl("javascript:console.log('"+TAG+" - onReadData " + result.getText() + ", codeid is " + result.getCodeID() + "');");
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
@@ -78,6 +80,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onTimeout() {
 					Log.e(TAG, "onTimeout");
+					webView.loadUrl("javascript:console.log('"+TAG+" - onTimeout');");
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onTimeout\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
@@ -87,6 +90,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onConnect(){
 					Log.e(TAG, "onConnect");
+					webView.loadUrl("javascript:console.log('"+TAG+" - onConnect');");
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onConnect\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
@@ -97,6 +101,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onDisconnect(){
 					Log.e(TAG, "onDisconnect");
+					webView.loadUrl("javascript:console.log('"+TAG+" - onDisconnect');");
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onDisconnect\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
@@ -106,6 +111,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onStart(){
 					Log.e(TAG, "onStart");
+					webView.loadUrl("javascript:console.log('"+TAG+" - onStart');");
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onStart\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
@@ -114,6 +120,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onStop(){
 					Log.e(TAG, "onStop");
+					webView.loadUrl("javascript:console.log('"+TAG+" - onStop');");
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onStop\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
@@ -122,6 +129,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onImgBuffer(byte[] imgdata, int type){
 					Log.e(TAG, "onImgBuffer type=" + type + " imagesize=" + imgdata.length);
+					webView.loadUrl("javascript:console.log('"+TAG+" - onImgBuffer type=" + type + " imagesize=" + imgdata.length + "');");
 
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
@@ -142,11 +150,15 @@ public class OpticonPlugin extends CordovaPlugin {
 	private void takeSnapshot(CallbackContext callbackContext) {
 		if (!initialized) {
 			callbackContext.error("Scanner not initialized; call initScanner first");
+			Log.e(TAG, "takeSnapshot failed due to scanner not being initialized");
+			webView.loadUrl("javascript:console.log('"+TAG+" - takeSnapshot failed due to scanner not being initialized');");
 		}
 		else {
 			try {
 				if (serverconnect) {
 					mBarcodeManager.takeSnapshot(1, 8, 1, 100);
+					Log.e(TAG, "takeSnapshot called with parameters 1, 8, 1, 100");
+					webView.loadUrl("javascript:console.log('"+TAG+" - takeSnapshot called with parameters 1, 8, 1, 100');");
 					// void takeSnapshot(int subSampling, int bitPerPixel, int imageType, int jpegQuality);
 					// Parameters
 					// int subSampling: 1, 2, 4, 8
@@ -224,6 +236,29 @@ public class OpticonPlugin extends CordovaPlugin {
 		}
 	}
 
+	private void isConnected(CallbackContext callbackContext) {
+		if (serverconnect) {
+			try {
+				callbackContext.success("Var serverconnect is TRUE");
+				Log.e(TAG, "Scanner IS connected");
+				webView.loadUrl("javascript:console.log('"+TAG+" - Scanner IS connected');");
+            }
+            catch (Exception ex) {
+                callbackContext.error("Something went wrong with isConnected: " + ex);
+            }
+		} 
+		else {
+			try {
+				callbackContext.success("Var serverconnect is FALSE");
+				Log.e(TAG, "Scanner IS NOT connected");
+				webView.loadUrl("javascript:console.log('"+TAG+" - Scanner IS NOT connected');");
+            }
+            catch (Exception ex) {
+                callbackContext.error("Something went wrong with isConnected: " + ex);
+            }
+		}
+	}
+
 	private void echo(String message, CallbackContext callbackContext) {
 		if (message != null && message.length() > 0) {
 			try {
@@ -274,6 +309,11 @@ public class OpticonPlugin extends CordovaPlugin {
 		if (action.equals("stopTrigger")) {
 			this.stopTrigger(callbackContext);
 			Log.e(TAG, "stopTrigger called");
+			return true;
+		}
+		if (action.equals("isConnected")) {
+			this.isConnected(callbackContext);
+			Log.e(TAG, "isConnected called");
 			return true;
 		}
 		return false;
