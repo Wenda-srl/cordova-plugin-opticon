@@ -133,8 +133,8 @@ public class OpticonPlugin extends CordovaPlugin {
 				}
 			};
 
-			mBarcodeManager.init();
 			mBarcodeManager.addListener(mEventListener);
+			mBarcodeManager.init();
 			initialized = true;
 			callbackContext.success("Scanner initialized!");
 		}
