@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.util.Log;
 import android.media.AudioManager;
 import android.os.Handler;
+import android.webkit.WebView;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -62,7 +63,6 @@ public class OpticonPlugin extends CordovaPlugin {
 			Context context = this.cordova.getActivity().getApplicationContext();
 			Log.e(TAG, "initScan: XXX");
 			mBarcodeManager = new BarcodeManager(context);
-			mBarcodeManager.init();
 
 			mEventListener = new EventListener() {
 
@@ -122,7 +122,10 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onImgBuffer(byte[] imgdata, int type){
 					Log.e(TAG, "onImgBuffer type=" + type + " imagesize=" + imgdata.length);
-
+					
+					WebView myWebView = (WebView) findViewById(R.id.webview);
+					myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
+					
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
 					pluginResult.setKeepCallback(true);
@@ -130,6 +133,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				}
 			};
 
+			mBarcodeManager.init();
 			mBarcodeManager.addListener(mEventListener);
 			initialized = true;
 			callbackContext.success("Scanner initialized!");
@@ -239,6 +243,8 @@ public class OpticonPlugin extends CordovaPlugin {
 	}
 
 	private void echo(String message, CallbackContext callbackContext) {
+		WebView myWebView = (WebView) findViewById(R.id.webview);
+		myWebView.loadUrl("javascript:console.log('@@@ called echo @@@');");
 		if (message != null && message.length() > 0) {
 			try {
 				callbackContext.success("Ciao, " + message);
