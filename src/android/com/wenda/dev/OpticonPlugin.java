@@ -121,10 +121,10 @@ public class OpticonPlugin extends CordovaPlugin {
 
 				@Override
 				public void onImgBuffer(byte[] imgdata, int type){
-					Log.e(TAG, "onImgBuffer type=" + type + " imagesize=" + imgdata.length);
-					
 					WebView myWebView = (WebView) findViewById(R.id.webview);
 					myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
+					
+					Log.e(TAG, "onImgBuffer type=" + type + " imagesize=" + imgdata.length);
 					
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
@@ -143,6 +143,16 @@ public class OpticonPlugin extends CordovaPlugin {
         }
 	}
 
+	private void deinitScanner(CallbackContext callbackContext) {
+		try {
+			mBarcodeManager.removeListener();
+			mBarcodeManager.deinit();
+		}
+		catch (Exception ex) {
+			callbackContext.error("Something went wrong with deinitScanner: " + ex);
+        	}
+	}
+	
 	private void takeSnapshot(CallbackContext callbackContext) {
 		if (!initialized) {
 			callbackContext.error("Scanner not initialized; call initScanner first");
@@ -269,6 +279,11 @@ public class OpticonPlugin extends CordovaPlugin {
 		if (action.equals("initOpticon")) {
 			this.initScanner(callbackContext);
 			Log.e(TAG, "Initialised opticon handscanner API");
+			return true;
+		}
+		if (action.equals("deinitOpticon")) {
+			this.deinitScanner(callbackContext);
+			Log.e(TAG, "Deinitialised opticon handscanner API");
 			return true;
 		}
 		if (action.equals("takeSnapshot")) {
