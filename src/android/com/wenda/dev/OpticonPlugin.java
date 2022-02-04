@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.util.Log;
 import android.media.AudioManager;
 import android.os.Handler;
-import android.webkit.WebView;
+// import android.webkit.WebView;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -121,8 +121,9 @@ public class OpticonPlugin extends CordovaPlugin {
 
 				@Override
 				public void onImgBuffer(byte[] imgdata, int type){
-					WebView myWebView = (WebView) findViewById(R.id.webview);
-					myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
+					// WebView myWebView = (WebView) findViewById(R.id.webview);
+					// myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
+					System.out.print('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@')					
 					
 					Log.e(TAG, "onImgBuffer type=" + type + " imagesize=" + imgdata.length);
 					
@@ -255,8 +256,9 @@ public class OpticonPlugin extends CordovaPlugin {
 	}
 
 	private void echo(String message, CallbackContext callbackContext) {
-		WebView myWebView = (WebView) findViewById(R.id.webview);
-		myWebView.loadUrl("javascript:console.log('@@@ called echo @@@');");
+		// WebView myWebView = (WebView) findViewById(R.id.webview);
+		// myWebView.loadUrl("javascript:console.log('@@@ called echo @@@');");
+		System.out.print('@@@ called echo @@@');
 		if (message != null && message.length() > 0) {
 			try {
 				callbackContext.success("Ciao, " + message);
