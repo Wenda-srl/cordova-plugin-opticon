@@ -9,6 +9,10 @@ module.exports.initOpticon = function (callback, error) {
     exec(callback, error, 'OpticonCordovaPlugin', 'initOpticon', []);
 };
 
+module.exports.deinitOpticon = function (callback, error) {
+    exec(callback, error, 'OpticonCordovaPlugin', 'deinitOpticon', []);
+};
+
 module.exports.takeSnapshot = function (callback, error) {
     exec(callback, error, 'OpticonCordovaPlugin', 'takeSnapshot', []);
 };
