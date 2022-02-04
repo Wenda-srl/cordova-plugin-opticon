@@ -147,6 +147,8 @@ public class OpticonPlugin extends CordovaPlugin {
 		try {
 			mBarcodeManager.removeListener();
 			mBarcodeManager.deinit();
+			initialized = false;
+			callbackContext.success("Scanner deinitialized!");
 		}
 		catch (Exception ex) {
 			callbackContext.error("Something went wrong with deinitScanner: " + ex);
