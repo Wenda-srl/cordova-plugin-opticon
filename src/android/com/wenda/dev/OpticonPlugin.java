@@ -123,7 +123,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				public void onImgBuffer(byte[] imgdata, int type){
 					// WebView myWebView = (WebView) findViewById(R.id.webview);
 					// myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
-					System.out.print('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');					
+					System.out.print('@@@ onImgBuffer imagesize=' + imgdata.length + ' @@@');					
 					
 					Log.e(TAG, "onImgBuffer type=" + type + " imagesize=" + imgdata.length);
 					
