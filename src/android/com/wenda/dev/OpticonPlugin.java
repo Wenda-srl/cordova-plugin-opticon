@@ -127,6 +127,15 @@ public class OpticonPlugin extends CordovaPlugin {
 					
 					Log.e(TAG, "onImgBuffer type=" + type + " imagesize=" + imgdata.length);
 					
+					/*
+					JSONObject event = new JSONObject();
+					event.put("name", "onImgBuffer");
+					event.put("data", Base64.encodeToString(imgdata, Base64.DEFAULT));
+					PluginResult result = new PluginResult(PluginResult.Status.OK, event);
+					result.setKeepCallback(true);
+					callbackContext.sendPluginResult(result);
+					*/
+					
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
 					pluginResult.setKeepCallback(true);
