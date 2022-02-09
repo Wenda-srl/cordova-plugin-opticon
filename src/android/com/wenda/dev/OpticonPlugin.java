@@ -37,7 +37,7 @@ import android.content.Context;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.apache.cordova.CallbackContext;
-import org.apache.cordova.console;
+// import org.apache.cordova.console;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -124,7 +124,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				public void onImgBuffer(byte[] imgdata, int type){
 					// WebView myWebView = (WebView) findViewById(R.id.webview);
 					// myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
-					console.log("OPTICON PLUGIN >>> onImgBuffer FIRED!!");					
+					// console.log("OPTICON PLUGIN >>> onImgBuffer FIRED!!");					
 					
 					Log.e(TAG, "onImgBuffer type=" + type + " imagesize=" + imgdata.length);
 					
@@ -268,7 +268,7 @@ public class OpticonPlugin extends CordovaPlugin {
 	private void echo(String message, CallbackContext callbackContext) {
 		// WebView myWebView = (WebView) findViewById(R.id.webview);
 		// myWebView.loadUrl("javascript:console.log('@@@ called echo @@@');");
-		console.log("OPTICON PLUGIN >>> ECHO FIRED!!");					
+		// console.log("OPTICON PLUGIN >>> ECHO FIRED!!");					
 		if (message != null && message.length() > 0) {
 			try {
 				callbackContext.success("Ciao, " + message);
