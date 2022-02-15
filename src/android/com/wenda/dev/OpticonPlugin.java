@@ -64,6 +64,7 @@ public class OpticonPlugin extends CordovaPlugin {
 			Context context = this.cordova.getActivity().getApplicationContext();
 			Log.e(TAG, "initScan: XXX");
 			mBarcodeManager = new BarcodeManager(context);
+			mBarcodeManager.init();
 
 			mEventListener = new EventListener() {
 
@@ -145,7 +146,7 @@ public class OpticonPlugin extends CordovaPlugin {
 			};
 
 			mBarcodeManager.addListener(mEventListener);
-			mBarcodeManager.init();
+			// mBarcodeManager.init();
 			initialized = true;
 			callbackContext.success("Scanner initialized!");
 		}
