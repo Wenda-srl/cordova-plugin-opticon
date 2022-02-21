@@ -71,9 +71,20 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onReadData(BarcodeData result) {
 					Log.e(TAG, "onReadData " + result.getText() + ", codeid is" + result.getCodeID());
+					
+					JSONObject event = new JSONObject();
+					event.put("event", "onReadData");
+					event.put("data", result.getText());
+					event.put("id", result.getCodeID());
+					PluginResult result = new PluginResult(PluginResult.Status.OK, event);
+					result.setKeepCallback(true);
+					callbackContext.sendPluginResult(result);
+					/*
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
+					*/
+					
 					ignoreStop = true;
 				}
 
@@ -127,7 +138,7 @@ public class OpticonPlugin extends CordovaPlugin {
 					// myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
 					// console.log("OPTICON PLUGIN >>> onImgBuffer FIRED!!");					
 					
-					Log.e(TAG, "onImgBuffer type=" + type + " imagesize=" + imgdata.length);
+					Log.e(TAG, "onImgBuffer type=" + type + " Image Size=" + imgdata.length);
 					
 					/*
 					JSONObject event = new JSONObject();
@@ -160,6 +171,7 @@ public class OpticonPlugin extends CordovaPlugin {
 			mBarcodeManager.removeListener();
 			mBarcodeManager.deinit();
 			initialized = false;
+			serverconnect = false;
 			callbackContext.success("Scanner deinitialized!");
 		}
 		catch (Exception ex) {
