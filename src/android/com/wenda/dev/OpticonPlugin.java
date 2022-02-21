@@ -71,7 +71,8 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onReadData(BarcodeData result) {
 					Log.e(TAG, "onReadData " + result.getText() + ", codeid is" + result.getCodeID());
-					
+
+					/*
 					JSONObject event = new JSONObject();
 					event.put("event", "onReadData");
 					event.put("data", result.getText());
@@ -79,11 +80,10 @@ public class OpticonPlugin extends CordovaPlugin {
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, event);
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
-					/*
+					*/
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
-					*/
 					
 					ignoreStop = true;
 				}
