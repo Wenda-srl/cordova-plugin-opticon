@@ -77,7 +77,7 @@ public class OpticonPlugin extends CordovaPlugin {
 					event.put("data", result.getText());
 					event.put("id", result.getCodeID());
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, event);
-					result.setKeepCallback(true);
+					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
 					/*
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
