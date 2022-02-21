@@ -85,7 +85,9 @@ public class OpticonPlugin extends CordovaPlugin {
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
 					
-					ignoreStop = true;
+					// ignoreStop = true;
+					this.stopDecode(callbackContext);
+					
 				}
 
 				@Override
@@ -127,6 +129,9 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onStop(){
 					Log.e(TAG, "onStop");
+					
+					this.stopDecode(callbackContext);
+					
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onStop\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
