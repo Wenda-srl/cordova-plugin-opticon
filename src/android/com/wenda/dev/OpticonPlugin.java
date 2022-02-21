@@ -76,9 +76,9 @@ public class OpticonPlugin extends CordovaPlugin {
 					event.put("event", "onReadData");
 					event.put("data", result.getText());
 					event.put("id", result.getCodeID());
-					PluginResult result = new PluginResult(PluginResult.Status.OK, event);
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, event);
 					result.setKeepCallback(true);
-					callbackContext.sendPluginResult(result);
+					callbackContext.sendPluginResult(pluginResult);
 					/*
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
 					pluginResult.setKeepCallback(true);
@@ -144,9 +144,9 @@ public class OpticonPlugin extends CordovaPlugin {
 					JSONObject event = new JSONObject();
 					event.put("name", "onImgBuffer");
 					event.put("data", Base64.encodeToString(imgdata, Base64.DEFAULT));
-					PluginResult result = new PluginResult(PluginResult.Status.OK, event);
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, event);
 					result.setKeepCallback(true);
-					callbackContext.sendPluginResult(result);
+					callbackContext.sendPluginResult(pluginResult);
 					*/
 					
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
