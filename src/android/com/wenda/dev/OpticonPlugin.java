@@ -139,9 +139,14 @@ public class OpticonPlugin extends CordovaPlugin {
 
 				@Override
 				public void onImgBuffer(byte[] imgdata, int type){
+					
+					// WebView myWebView = new WebView(this);
+ 					// setContentView(myWebView);					
+					// myWebView.getSettings().setJavaScriptEnabled(true);
+					
 					// WebView myWebView = (WebView) findViewById(R.id.webview);
+					
 					// myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
-					// console.log("OPTICON PLUGIN >>> onImgBuffer FIRED!!");					
 					
 					Log.e(TAG, "onImgBuffer type=" + type + " Image Size=" + imgdata.length);
 					
