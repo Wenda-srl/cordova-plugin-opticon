@@ -39,6 +39,11 @@ import org.apache.cordova.PluginResult;
 import org.apache.cordova.CallbackContext;
 // import org.apache.cordova.console;
 
+import java.io.File;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +55,7 @@ public class OpticonPlugin extends CordovaPlugin {
 	private EventListener mEventListener;
 
 	private CallbackContext callbackContext;
+	private String imageName;
 
 	private boolean ignoreStop = false;
 	int i=0;
@@ -168,7 +174,30 @@ public class OpticonPlugin extends CordovaPlugin {
 					*/
 					
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
+
+					// Saving image to app directory (subfolder "savedSnapshots") with passed imageName
+					String extension = (type == 1) ? ".jpg" : ".bmp";
+					File path = new File(getFilesDir(), "savedSnapshots");
+					File img = new File(path, this.imageName + extension);
+					try {
+						path.mkdirs();
+						OutputStream os = new FileOutputStream(img);
+						os.write(imgdata);
+						os.close();
+						Log.i(TAG, "onImgBuffer image " + this.imageName + extension + " saved in " + path.toString());
+
+						// Sending back path to saved image through callback (should be: appFolder/savedSnapshot/imageName.jpg)
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + img.toString() + "\"}");
+					} catch (IOException e) {
+						// Something went wrong with saving bitmap to filesystem
+						Log.w(TAG, "onImgBuffer ERROR writing " + file, e);
+
+						// Send error to callbackContext?
+						// For now we keep sending back image data instead of triggering an error
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + img.toString() + "\"}");
+					}
+
+					// PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
 				}
@@ -197,13 +226,14 @@ public class OpticonPlugin extends CordovaPlugin {
         	}
 	}
 	
-	private void takeSnapshot(CallbackContext callbackContext) {
+	private void takeSnapshot(String imageName, CallbackContext callbackContext) {
 		if (!initialized) {
 			callbackContext.error("Scanner not initialized; call initScanner first");
 		}
 		else {
 			try {
 				if (serverconnect) {
+					this.imageName = imageName;
 					mBarcodeManager.takeSnapshot(1, 8, 1, 100);
 					// void takeSnapshot(int subSampling, int bitPerPixel, int imageType, int jpegQuality);
 					// Parameters
@@ -336,7 +366,8 @@ public class OpticonPlugin extends CordovaPlugin {
 			return true;
 		}
 		if (action.equals("takeSnapshot")) {
-			this.takeSnapshot(callbackContext);
+			String imageName = args.getString(0);
+			this.takeSnapshot(imageName, callbackContext);
 			Log.e(TAG, "takeSnapshot called");
 			return true;
 		}
