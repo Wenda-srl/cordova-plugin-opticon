@@ -300,7 +300,7 @@ public class OpticonPlugin extends CordovaPlugin {
 		this.cordova.getActivity().runOnUiThread(new Runnable() {
 			    @Override
 			    public void run() {
-				this.webView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
+				webView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
 			    }
 			});
 		
