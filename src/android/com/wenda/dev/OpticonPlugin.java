@@ -141,7 +141,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				public void onImgBuffer(byte[] imgdata, int type){
 					Log.e(TAG, "onImgBuffer type=" + type + " Image Size=" + imgdata.length);
 					
-					this.cordova.getActivity().runOnUiThread(new Runnable() {
+					cordova.getActivity().runOnUiThread(new Runnable() {
 						    @Override
 						    public void run() {
 							webView.loadUrl("javascript:console.log('----------------------- ON_IMG_BUFFER FIRED -----------------------');");
