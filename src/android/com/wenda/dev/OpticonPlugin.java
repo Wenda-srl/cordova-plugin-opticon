@@ -141,21 +141,23 @@ public class OpticonPlugin extends CordovaPlugin {
 				public void onImgBuffer(byte[] imgdata, int type){
 					Log.e(TAG, "onImgBuffer type=" + type + " Image Size=" + imgdata.length);
 					
+					/*
 					cordova.getActivity().runOnUiThread(new Runnable() {
 						    @Override
 						    public void run() {
 							webView.loadUrl("javascript:console.log('----------------------- ON_IMG_BUFFER FIRED -----------------------');");
 						    }
 						});
-					/*
+					*/
+					
 					String event_data = String.format("javascript:cordova.fireDocumentEvent('imgbuffer', { 'picture': '%s' });", Base64.encodeToString(imgdata, Base64.DEFAULT));
-					this.cordova.getActivity().runOnUiThread(new Runnable() {
+					cordova.getActivity().runOnUiThread(new Runnable() {
 						    @Override
 						    public void run() {
 							webView.loadUrl(event_data);
 						    }
 						});
-					*/
+					
 					/*
 					JSONObject event = new JSONObject();
 					event.put("name", "onImgBuffer");
