@@ -139,14 +139,15 @@ public class OpticonPlugin extends CordovaPlugin {
 
 				@Override
 				public void onImgBuffer(byte[] imgdata, int type){
-					
-					// WebView myWebView = new WebView(this);
- 					// setContentView(myWebView);					
-					// myWebView.getSettings().setJavaScriptEnabled(true);
-					
-					// myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
-					
 					Log.e(TAG, "onImgBuffer type=" + type + " Image Size=" + imgdata.length);
+					
+					String event_data = String.format("javascript:cordova.fireDocumentEvent('imgbuffer', { 'picture': '%s' });", Base64.encodeToString(imgdata, Base64.DEFAULT));
+					this.cordova.getActivity().runOnUiThread(new Runnable() {
+						    @Override
+						    public void run() {
+							webView.loadUrl(event_data);
+						    }
+						});
 					
 					/*
 					JSONObject event = new JSONObject();
@@ -287,16 +288,6 @@ public class OpticonPlugin extends CordovaPlugin {
 	}
 
 	private void echo(String message, CallbackContext callbackContext) {
-		
-		/*
-		WebView myWebView = new WebView(this);
-		setContentView(myWebView);					
-		myWebView.getSettings().setJavaScriptEnabled(true);
-		myWebView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
-		*/
-
-		// this.webView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
-		
 		this.cordova.getActivity().runOnUiThread(new Runnable() {
 			    @Override
 			    public void run() {
