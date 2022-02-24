@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.util.Log;
 import android.media.AudioManager;
 import android.os.Handler;
-// import android.webkit.WebView;
+import android.webkit.WebView;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -143,8 +143,6 @@ public class OpticonPlugin extends CordovaPlugin {
 					// WebView myWebView = new WebView(this);
  					// setContentView(myWebView);					
 					// myWebView.getSettings().setJavaScriptEnabled(true);
-					
-					// WebView myWebView = (WebView) findViewById(R.id.webview);
 					
 					// myWebView.loadUrl("javascript:console.log('@@@ onImgBuffer imagesize=" + imgdata.length + " @@@');");
 					
@@ -289,16 +287,20 @@ public class OpticonPlugin extends CordovaPlugin {
 	}
 
 	private void echo(String message, CallbackContext callbackContext) {
-		// WebView myWebView = (WebView) findViewById(R.id.webview);
-		// myWebView.loadUrl("javascript:console.log('@@@ called echo @@@');");
-		// console.log("OPTICON PLUGIN >>> ECHO FIRED!!");					
+		
+		WebView myWebView = new WebView(this);
+		setContentView(myWebView);					
+		myWebView.getSettings().setJavaScriptEnabled(true);
+
+		myWebView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
+
 		if (message != null && message.length() > 0) {
 			try {
 				callbackContext.success("Ciao, " + message);
-            }
-            catch (Exception ex) {
-                callbackContext.error("Something went wrong: " + ex);
-            }
+			    }
+			    catch (Exception ex) {
+				callbackContext.error("Something went wrong: " + ex);
+			    }
 		} 
 		else {
 			callbackContext.error("Expected one non-empty string argument.");
