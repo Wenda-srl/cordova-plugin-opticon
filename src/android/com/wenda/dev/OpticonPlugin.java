@@ -288,11 +288,14 @@ public class OpticonPlugin extends CordovaPlugin {
 
 	private void echo(String message, CallbackContext callbackContext) {
 		
+		/*
 		WebView myWebView = new WebView(this);
 		setContentView(myWebView);					
 		myWebView.getSettings().setJavaScriptEnabled(true);
-
 		myWebView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
+		*/
+
+		this.webView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
 
 		if (message != null && message.length() > 0) {
 			try {
