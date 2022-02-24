@@ -295,7 +295,14 @@ public class OpticonPlugin extends CordovaPlugin {
 		myWebView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
 		*/
 
-		this.webView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
+		// this.webView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
+		
+		this.webView.post(new Runnable() {
+		    @Override
+		    public void run() {
+			this.webView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
+		    }
+		});
 
 		if (message != null && message.length() > 0) {
 			try {
