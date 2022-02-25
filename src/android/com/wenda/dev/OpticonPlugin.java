@@ -247,8 +247,11 @@ public class OpticonPlugin extends CordovaPlugin {
 					// int subSampling: 1, 2, 4, 8
 					// int bitPerPixel: 1, 4, 8, 10
 					// int imageType: Jpeg(1), Bmp(3) int jpegQuality: 5~100 (%)
-					callbackContext.success("Snapshot taken");
-				}
+					//callbackContext.success("Snapshot taken");
+					
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "Image taken");
+					pluginResult.setKeepCallback(true);
+					callbackContext.sendPluginResult(pluginResult);				}
 			} catch (Exception e) {
 				callbackContext.error("Something went wrong with takeSnapshot: " + e);
 			}
