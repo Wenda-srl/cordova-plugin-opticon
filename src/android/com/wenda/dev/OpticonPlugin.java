@@ -156,14 +156,6 @@ public class OpticonPlugin extends CordovaPlugin {
 						});
 					*/
 					
-					String event_data = String.format("javascript:cordova.fireDocumentEvent('imgbuffer', { 'picture': '%s' });", Base64.encodeToString(imgdata, Base64.DEFAULT));
-					cordova.getActivity().runOnUiThread(new Runnable() {
-						    @Override
-						    public void run() {
-							webView.loadUrl(event_data);
-						    }
-						});
-					
 					/*
 					JSONObject event = new JSONObject();
 					event.put("name", "onImgBuffer");
@@ -201,6 +193,14 @@ public class OpticonPlugin extends CordovaPlugin {
 						pluginResult.setKeepCallback(true);
 						callbackContext.sendPluginResult(pluginResult);
 					}
+
+					String event_data = String.format("javascript:cordova.fireDocumentEvent('imgbuffer', { 'picture': '%s' });", Base64.encodeToString(imgdata, Base64.DEFAULT));
+					cordova.getActivity().runOnUiThread(new Runnable() {
+						    @Override
+						    public void run() {
+							webView.loadUrl(event_data);
+						    }
+						});
 					
 					/*
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
