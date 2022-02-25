@@ -179,16 +179,18 @@ public class OpticonPlugin extends CordovaPlugin {
 					
 					String extension = (type == 1) ? ".jpg" : ".bmp";
 					File path = new File(cordova.getActivity().getApplicationContext().getFilesDir(), "uploaded");
-					File img = new File(path, this.imageName + extension);
+					File img = new File(path, imageName + extension);
 					try {
 						path.mkdirs();
 						OutputStream os = new FileOutputStream(img);
 						os.write(imgdata);
 						os.close();
-						Log.i(TAG, "onImgBuffer image " + this.imageName + extension + " saved in " + path.toString());
+						Log.i(TAG, "onImgBuffer image " + imageName + extension + " saved in " + path.toString());
 
 						// Sending back path to saved image through callback (should be: appFolder/uploaded/imageName.jpg)
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + img.toString() + "\"}");
+						pluginResult.setKeepCallback(true);
+						callbackContext.sendPluginResult(pluginResult);
 					} catch (IOException e) {
 						// Something went wrong with saving bitmap to filesystem
 						Log.w(TAG, "onImgBuffer ERROR writing file", e);
@@ -196,12 +198,15 @@ public class OpticonPlugin extends CordovaPlugin {
 						// Send error to callbackContext?
 						// For now we keep sending back image data instead of triggering an error
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + img.toString() + "\"}");
+						pluginResult.setKeepCallback(true);
+						callbackContext.sendPluginResult(pluginResult);
 					}
 					
-
+					/*
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
+					*/
 				}
 			};
 
