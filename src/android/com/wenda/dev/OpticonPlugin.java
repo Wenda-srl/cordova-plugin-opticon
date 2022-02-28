@@ -88,16 +88,14 @@ public class OpticonPlugin extends CordovaPlugin {
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
 					*/
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
+					pluginResult.setKeepCallback(true);
 					if (myCallBack != null) {
 						Log.i(TAG, ">>> myCallBack <<<");
-						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
-						pluginResult.setKeepCallback(true);
 						myCallBack.sendPluginResult(pluginResult);
 						myCallBack = null;
 					}
 					else {
-						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"event\": \"onImgBuffer\", \"data\": " + e + "}");
-						pluginResult.setKeepCallback(true);
 						callbackContext.sendPluginResult(pluginResult);
 					}
 					ignoreStop = true;
