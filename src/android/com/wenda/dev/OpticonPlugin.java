@@ -163,7 +163,6 @@ public class OpticonPlugin extends CordovaPlugin {
 
 					try {
 						// Saving image to app directory (subfolder "uploaded") with passed imageName
-						/*
 						String extension = (type == 1) ? ".jpg" : ".bmp";
 						File path = new File(cordova.getActivity().getApplicationContext().getFilesDir(), "uploaded");
 						File img = new File(path, imageName + extension);
@@ -172,11 +171,9 @@ public class OpticonPlugin extends CordovaPlugin {
 						os.write(imgdata);
 						os.close();
 						Log.i(TAG, "onImgBuffer image " + imageName + extension + " saved in " + path.toString());
-						*/
-						// Sending back path to saved image through callback (should be: appFolder/uploaded/imageName.jpg)
 
 						// PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
-						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.getEncoder().encodeToString((imgdata) + "\"}");
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.getEncoder().encodeToString(imgdata) + "\"}");
 						pluginResult.setKeepCallback(true);
 						if (myCallBack != null) {
 							Log.i(TAG, ">>> myCallBack <<<");
