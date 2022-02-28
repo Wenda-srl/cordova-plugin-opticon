@@ -143,7 +143,7 @@ public class OpticonPlugin extends CordovaPlugin {
 					Log.e(TAG, "onStop");
 					
 					if (myCallBack != null) {
-						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"event\": \"onStop\"}");
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "TIMEOUT");
 						pluginResult.setKeepCallback(true);
 						Log.i(TAG, ">>> myCallBack <<<");
 						myCallBack.sendPluginResult(pluginResult);
@@ -173,7 +173,8 @@ public class OpticonPlugin extends CordovaPlugin {
 						Log.i(TAG, "onImgBuffer image " + imageName + extension + " saved in " + path.toString());
 
 						// PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
-						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.getEncoder().encodeToString(imgdata) + "\"}");
+						// PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.getEncoder().encodeToString(imgdata) + "\"}");
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, imgdata);
 						pluginResult.setKeepCallback(true);
 						if (myCallBack != null) {
 							Log.i(TAG, ">>> myCallBack <<<");
