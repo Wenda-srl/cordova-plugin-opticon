@@ -171,7 +171,7 @@ public class OpticonPlugin extends CordovaPlugin {
 						// Sending back path to saved image through callback (should be: appFolder/uploaded/imageName.jpg)
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + img.toString() + "\"}");
 						pluginResult.setKeepCallback(true);
-						if (myCallBack) {
+						if (myCallBack != null) {
 							Log.i(TAG, ">>> myCallBack <<<");
 							myCallBack.sendPluginResult(pluginResult);
 							myCallBack = null;
@@ -187,7 +187,7 @@ public class OpticonPlugin extends CordovaPlugin {
 						// For now we keep sending back image data instead of triggering an error
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"event\": \"onImgBuffer\", \"data\": " + e + "}");
 						pluginResult.setKeepCallback(true);
-						if (myCallBack) {
+						if (myCallBack != null) {
 							Log.i(TAG, ">>> myCallBack <<<");
 							myCallBack.sendPluginResult(pluginResult);
 							myCallBack = null;
