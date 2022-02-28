@@ -55,6 +55,7 @@ public class OpticonPlugin extends CordovaPlugin {
 	private EventListener mEventListener;
 
 	private CallbackContext callbackContext;
+	private CallbackContext myCallBack = null;
 	private String imageName;
 
 	private boolean ignoreStop = false;
@@ -146,16 +147,6 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onImgBuffer(byte[] imgdata, int type){
 					Log.e(TAG, "onImgBuffer type=" + type + " Image Size=" + imgdata.length);
-					
-					/*
-					cordova.getActivity().runOnUiThread(new Runnable() {
-						    @Override
-						    public void run() {
-							webView.loadUrl("javascript:console.log('----------------------- ON_IMG_BUFFER FIRED -----------------------');");
-						    }
-						});
-					*/
-					
 					/*
 					JSONObject event = new JSONObject();
 					event.put("name", "onImgBuffer");
@@ -164,11 +155,9 @@ public class OpticonPlugin extends CordovaPlugin {
 					result.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
 					*/
-					
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 
 					// Saving image to app directory (subfolder "uploaded") with passed imageName
-					
 					String extension = (type == 1) ? ".jpg" : ".bmp";
 					File path = new File(cordova.getActivity().getApplicationContext().getFilesDir(), "uploaded");
 					File img = new File(path, imageName + extension);
@@ -182,18 +171,33 @@ public class OpticonPlugin extends CordovaPlugin {
 						// Sending back path to saved image through callback (should be: appFolder/uploaded/imageName.jpg)
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + img.toString() + "\"}");
 						pluginResult.setKeepCallback(true);
-						callbackContext.sendPluginResult(pluginResult);
+						if (myCallBack) {
+							Log.i(TAG, ">>> myCallBack <<<");
+							myCallBack.sendPluginResult(pluginResult);
+							myCallBack = null;
+						}
+						else {
+							callbackContext.sendPluginResult(pluginResult);
+						}
 					} catch (IOException e) {
 						// Something went wrong with saving bitmap to filesystem
 						Log.w(TAG, "onImgBuffer ERROR writing file", e);
 
 						// Send error to callbackContext?
 						// For now we keep sending back image data instead of triggering an error
-						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + img.toString() + "\"}");
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"event\": \"onImgBuffer\", \"data\": " + e + "}");
 						pluginResult.setKeepCallback(true);
-						callbackContext.sendPluginResult(pluginResult);
+						if (myCallBack) {
+							Log.i(TAG, ">>> myCallBack <<<");
+							myCallBack.sendPluginResult(pluginResult);
+							myCallBack = null;
+						}
+						else {
+							callbackContext.sendPluginResult(pluginResult);
+						}
 					}
 
+					/*
 					String event_data = String.format("javascript:cordova.fireDocumentEvent('imgbuffer', { 'picture': '%s' });", Base64.encodeToString(imgdata, Base64.DEFAULT));
 					cordova.getActivity().runOnUiThread(new Runnable() {
 						    @Override
@@ -201,6 +205,7 @@ public class OpticonPlugin extends CordovaPlugin {
 							webView.loadUrl(event_data);
 						    }
 						});
+					*/
 					
 					/*
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
@@ -247,11 +252,10 @@ public class OpticonPlugin extends CordovaPlugin {
 					// int subSampling: 1, 2, 4, 8
 					// int bitPerPixel: 1, 4, 8, 10
 					// int imageType: Jpeg(1), Bmp(3) int jpegQuality: 5~100 (%)
-					//callbackContext.success("Snapshot taken");
-					
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "Image taken");
-					pluginResult.setKeepCallback(true);
-					callbackContext.sendPluginResult(pluginResult);				}
+
+					// callbackContext.success("Snapshot taken");
+					myCallBack = callbackContext;
+				}
 			} catch (Exception e) {
 				callbackContext.error("Something went wrong with takeSnapshot: " + e);
 			}
