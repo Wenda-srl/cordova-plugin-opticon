@@ -177,7 +177,7 @@ public class OpticonPlugin extends CordovaPlugin {
 						else {
 							callbackContext.sendPluginResult(pluginResult);
 						}
-					} catch (IOException e) {
+					} catch (Exception e) {
 						Log.e(TAG, "onImgBuffer ERROR", e);
 						// Send error to callbackContext?
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"event\": \"onImgBuffer\", \"data\": " + e + "}");
