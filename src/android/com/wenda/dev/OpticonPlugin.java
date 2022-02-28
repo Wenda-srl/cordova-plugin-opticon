@@ -29,7 +29,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.util.Base64;
+// import android.util.Base64;
+import java.util.Base64;
 
 import android.content.res.Configuration;
 import android.content.Context;
@@ -141,11 +142,18 @@ public class OpticonPlugin extends CordovaPlugin {
 				public void onStop(){
 					Log.e(TAG, "onStop");
 					
-					//this.stopDecode(callbackContext);
-					
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onStop\"}");
-					pluginResult.setKeepCallback(true);
-					callbackContext.sendPluginResult(pluginResult);
+					if (myCallBack != null) {
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"event\": \"onStop\"}");
+						pluginResult.setKeepCallback(true);
+						Log.i(TAG, ">>> myCallBack <<<");
+						myCallBack.sendPluginResult(pluginResult);
+						myCallBack = null;
+					}
+					else {
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onStop\"}");
+						pluginResult.setKeepCallback(true);
+						callbackContext.sendPluginResult(pluginResult);
+					}
 				}
 
 				@Override
@@ -167,7 +175,8 @@ public class OpticonPlugin extends CordovaPlugin {
 						*/
 						// Sending back path to saved image through callback (should be: appFolder/uploaded/imageName.jpg)
 
-						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
+						// PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.getEncoder().encodeToString((imgdata) + "\"}");
 						pluginResult.setKeepCallback(true);
 						if (myCallBack != null) {
 							Log.i(TAG, ">>> myCallBack <<<");
