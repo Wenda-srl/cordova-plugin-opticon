@@ -114,11 +114,17 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onConnect(){
 					Log.e(TAG, "onConnect");
+					serverconnect = true;
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onConnect\"}");
 					pluginResult.setKeepCallback(true);
-					callbackContext.sendPluginResult(pluginResult);
-					serverconnect = true;
-
+					if (myCallBack != null) {
+						Log.i(TAG, ">>> myCallBack <<<");
+						myCallBack.sendPluginResult(pluginResult);
+						myCallBack = null;
+					}
+					else {
+						callbackContext.sendPluginResult(pluginResult);
+					}
 				}
 
 				@Override
@@ -220,13 +226,13 @@ public class OpticonPlugin extends CordovaPlugin {
 			};
 
 			mBarcodeManager.addListener(mEventListener);
-			// mBarcodeManager.init();
 			initialized = true;
-			callbackContext.success("Scanner initialized!");
+			// callbackContext.success("Scanner initialized!");
+			myCallBack = callbackContext;
 		}
 		catch (Exception ex) {
-            callbackContext.error("Something went wrong with initScanner: " + ex);
-        }
+        		callbackContext.error("Something went wrong with initScanner: " + ex);
+	        }
 	}
 
 	private void deinitScanner(CallbackContext callbackContext) {
