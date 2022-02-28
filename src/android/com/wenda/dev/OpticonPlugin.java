@@ -155,18 +155,20 @@ public class OpticonPlugin extends CordovaPlugin {
 					Log.e(TAG, "onImgBuffer type=" + type + " Image Size=" + imgdata.length);
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 
-					// Saving image to app directory (subfolder "uploaded") with passed imageName
-					String extension = (type == 1) ? ".jpg" : ".bmp";
-					File path = new File(cordova.getActivity().getApplicationContext().getFilesDir(), "uploaded");
-					File img = new File(path, imageName + extension);
 					try {
+						// Saving image to app directory (subfolder "uploaded") with passed imageName
+						/*
+						String extension = (type == 1) ? ".jpg" : ".bmp";
+						File path = new File(cordova.getActivity().getApplicationContext().getFilesDir(), "uploaded");
+						File img = new File(path, imageName + extension);
 						path.mkdirs();
 						OutputStream os = new FileOutputStream(img);
 						os.write(imgdata);
 						os.close();
 						Log.i(TAG, "onImgBuffer image " + imageName + extension + " saved in " + path.toString());
-
+						*/
 						// Sending back path to saved image through callback (should be: appFolder/uploaded/imageName.jpg)
+
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
 						pluginResult.setKeepCallback(true);
 						if (myCallBack != null) {
@@ -178,11 +180,8 @@ public class OpticonPlugin extends CordovaPlugin {
 							callbackContext.sendPluginResult(pluginResult);
 						}
 					} catch (IOException e) {
-						// Something went wrong with saving bitmap to filesystem
-						Log.w(TAG, "onImgBuffer ERROR writing file", e);
-
+						Log.e(TAG, "onImgBuffer ERROR", e);
 						// Send error to callbackContext?
-						// For now we keep sending back image data instead of triggering an error
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"event\": \"onImgBuffer\", \"data\": " + e + "}");
 						pluginResult.setKeepCallback(true);
 						if (myCallBack != null) {
