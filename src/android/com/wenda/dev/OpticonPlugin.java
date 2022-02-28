@@ -88,13 +88,19 @@ public class OpticonPlugin extends CordovaPlugin {
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
 					*/
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
-					pluginResult.setKeepCallback(true);
-					callbackContext.sendPluginResult(pluginResult);
-					
+					if (myCallBack != null) {
+						Log.i(TAG, ">>> myCallBack <<<");
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
+						pluginResult.setKeepCallback(true);
+						myCallBack.sendPluginResult(pluginResult);
+						myCallBack = null;
+					}
+					else {
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"event\": \"onImgBuffer\", \"data\": " + e + "}");
+						pluginResult.setKeepCallback(true);
+						callbackContext.sendPluginResult(pluginResult);
+					}
 					ignoreStop = true;
-					// this.stopDecode(callbackContext);
-					
 				}
 
 				@Override
@@ -147,14 +153,6 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onImgBuffer(byte[] imgdata, int type){
 					Log.e(TAG, "onImgBuffer type=" + type + " Image Size=" + imgdata.length);
-					/*
-					JSONObject event = new JSONObject();
-					event.put("name", "onImgBuffer");
-					event.put("data", Base64.encodeToString(imgdata, Base64.DEFAULT));
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, event);
-					result.setKeepCallback(true);
-					callbackContext.sendPluginResult(pluginResult);
-					*/
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 
 					// Saving image to app directory (subfolder "uploaded") with passed imageName
@@ -169,7 +167,7 @@ public class OpticonPlugin extends CordovaPlugin {
 						Log.i(TAG, "onImgBuffer image " + imageName + extension + " saved in " + path.toString());
 
 						// Sending back path to saved image through callback (should be: appFolder/uploaded/imageName.jpg)
-						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + img.toString() + "\"}");
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
 						pluginResult.setKeepCallback(true);
 						if (myCallBack != null) {
 							Log.i(TAG, ">>> myCallBack <<<");
@@ -270,10 +268,11 @@ public class OpticonPlugin extends CordovaPlugin {
 			try {
 				if (serverconnect) {
 					mBarcodeManager.startDecode();
-					callbackContext.success("Decode started");
+					// callbackContext.success("Decode started");
+					myCallBack = callbackContext;
 				}
 			} catch (Exception e) {
-            	callbackContext.error("Something went wrong with startDecode: " + e);
+            			callbackContext.error("Something went wrong with startDecode: " + e);
 			}
 		}
 	}
@@ -289,7 +288,7 @@ public class OpticonPlugin extends CordovaPlugin {
 					callbackContext.success("Decode stopped");
 				}
 			} catch (Exception e) {
-            	callbackContext.error("Something went wrong with stopDecode: " + e);
+            			callbackContext.error("Something went wrong with stopDecode: " + e);
 			}
 		}
 	}
@@ -305,7 +304,7 @@ public class OpticonPlugin extends CordovaPlugin {
 					callbackContext.success("Trigger started");
 				}
 			} catch (Exception e) {
-            	callbackContext.error("Something went wrong with startTrigger: " + e);
+            			callbackContext.error("Something went wrong with startTrigger: " + e);
 			}
 		}
 	}
