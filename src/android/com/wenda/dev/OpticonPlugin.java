@@ -29,8 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-// import android.util.Base64;
-import java.util.Base64;
+import android.util.Base64;
 
 import android.content.res.Configuration;
 import android.content.Context;
@@ -38,7 +37,6 @@ import android.content.Context;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.apache.cordova.CallbackContext;
-// import org.apache.cordova.console;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -50,14 +48,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class OpticonPlugin extends CordovaPlugin {
-	private static final String TAG = "ScannerSDK-MainActivity";
+	private static final String TAG = "ScannerSDK - MainActivity:";
 
 	private BarcodeManager mBarcodeManager;
 	private EventListener mEventListener;
 
 	private CallbackContext callbackContext;
 	private CallbackContext myCallBack = null;
-	private String imageName;
 
 	private boolean ignoreStop = false;
 	int i=0;
@@ -70,7 +67,7 @@ public class OpticonPlugin extends CordovaPlugin {
 	private void initScanner(CallbackContext callbackContext) {
 		try {
 			Context context = this.cordova.getActivity().getApplicationContext();
-			Log.e(TAG, "initScan: XXX");
+			Log.i(TAG, "INIT SCAN");
 			mBarcodeManager = new BarcodeManager(context);
 			mBarcodeManager.init();
 
@@ -78,8 +75,9 @@ public class OpticonPlugin extends CordovaPlugin {
 
 				@Override
 				public void onReadData(BarcodeData result) {
-					Log.e(TAG, "onReadData " + result.getText() + ", codeid is" + result.getCodeID());
+					Log.e(TAG, "ON READ DATA: " + result.getText() + ", code id is " + result.getCodeID());
 
+					// plugin result object constuction
 					/*
 					JSONObject event = new JSONObject();
 					event.put("event", "onReadData");
@@ -89,6 +87,7 @@ public class OpticonPlugin extends CordovaPlugin {
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
 					*/
+					
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onReadData\", \"data\": \"" + result.getText() + "\", \"id\": \"" + result.getCodeID() + "\"}");
 					pluginResult.setKeepCallback(true);
 					if (myCallBack != null) {
@@ -104,7 +103,7 @@ public class OpticonPlugin extends CordovaPlugin {
 
 				@Override
 				public void onTimeout() {
-					Log.e(TAG, "onTimeout");
+					Log.i(TAG, "ON TIMEOUT");
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onTimeout\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
@@ -113,32 +112,25 @@ public class OpticonPlugin extends CordovaPlugin {
 
 				@Override
 				public void onConnect(){
-					Log.e(TAG, "onConnect");
+					Log.i(TAG, "ON CONNECT");
 					serverconnect = true;
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onConnect\"}");
 					pluginResult.setKeepCallback(true);
-					if (myCallBack != null) {
-						Log.i(TAG, ">>> myCallBack <<<");
-						myCallBack.sendPluginResult(pluginResult);
-						myCallBack = null;
-					}
-					else {
-						callbackContext.sendPluginResult(pluginResult);
-					}
+					callbackContext.sendPluginResult(pluginResult);
 				}
 
 				@Override
 				public void onDisconnect(){
-					Log.e(TAG, "onDisconnect");
+					Log.i(TAG, "ON DISCONNECT");
+					serverconnect = false;
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onDisconnect\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
-					serverconnect = false;
 				}
 
 				@Override
 				public void onStart(){
-					Log.e(TAG, "onStart");
+					Log.i(TAG, "ON START");
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onStart\"}");
 					pluginResult.setKeepCallback(true);
 					callbackContext.sendPluginResult(pluginResult);
@@ -146,12 +138,13 @@ public class OpticonPlugin extends CordovaPlugin {
 
 				@Override
 				public void onStop(){
-					Log.e(TAG, "onStop");
+					Log.i(TAG, "ON STOP");
 					
 					if (myCallBack != null) {
+						// send timeout error for startDecode
+						Log.i(TAG, ">>> myCallBack <<<");
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "TIMEOUT");
 						pluginResult.setKeepCallback(true);
-						Log.i(TAG, ">>> myCallBack <<<");
 						myCallBack.sendPluginResult(pluginResult);
 						myCallBack = null;
 					}
@@ -164,7 +157,7 @@ public class OpticonPlugin extends CordovaPlugin {
 
 				@Override
 				public void onImgBuffer(byte[] imgdata, int type){
-					Log.e(TAG, "onImgBuffer type=" + type + " Image Size=" + imgdata.length);
+					Log.i(TAG, "ON IMG BUFFER type=" + type + " Image Size=" + imgdata.length);
 					// Bitmap bmp = BitmapFactory.decodeByteArray(imgdata, 0, imgdata.length);
 
 					try {
@@ -181,7 +174,6 @@ public class OpticonPlugin extends CordovaPlugin {
 						*/
 
 						// PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
-						// PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.getEncoder().encodeToString(imgdata) + "\"}");
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, imgdata);
 						pluginResult.setKeepCallback(true);
 						if (myCallBack != null) {
@@ -193,12 +185,10 @@ public class OpticonPlugin extends CordovaPlugin {
 							callbackContext.sendPluginResult(pluginResult);
 						}
 					} catch (Exception e) {
-						Log.e(TAG, "onImgBuffer ERROR", e);
-						// Send error to callbackContext?
+						Log.e(TAG, "ON IMG BUFFER ERROR", e);
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"event\": \"onImgBuffer\", \"data\": " + e + "}");
 						pluginResult.setKeepCallback(true);
 						if (myCallBack != null) {
-							Log.i(TAG, ">>> myCallBack <<<");
 							myCallBack.sendPluginResult(pluginResult);
 							myCallBack = null;
 						}
@@ -207,6 +197,7 @@ public class OpticonPlugin extends CordovaPlugin {
 						}
 					}
 
+					// javascript code injection
 					/*
 					String event_data = String.format("javascript:cordova.fireDocumentEvent('imgbuffer', { 'picture': '%s' });", Base64.encodeToString(imgdata, Base64.DEFAULT));
 					cordova.getActivity().runOnUiThread(new Runnable() {
@@ -216,19 +207,12 @@ public class OpticonPlugin extends CordovaPlugin {
 						    }
 						});
 					*/
-					
-					/*
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onImgBuffer\", \"data\": \"" + Base64.encodeToString(imgdata, Base64.DEFAULT) + "\"}");
-					pluginResult.setKeepCallback(true);
-					callbackContext.sendPluginResult(pluginResult);
-					*/
 				}
 			};
 
 			mBarcodeManager.addListener(mEventListener);
 			initialized = true;
-			// callbackContext.success("Scanner initialized!");
-			myCallBack = callbackContext;
+			callbackContext.success("Scanner initialized!");
 		}
 		catch (Exception ex) {
         		callbackContext.error("Something went wrong with initScanner: " + ex);
@@ -241,30 +225,33 @@ public class OpticonPlugin extends CordovaPlugin {
 			mBarcodeManager.deinit();
 			initialized = false;
 			serverconnect = false;
-			callbackContext.success("Scanner deinitialized!");
+			callbackContext.success("Scanner deinitialized.");
 		}
 		catch (Exception ex) {
 			callbackContext.error("Something went wrong with deinitScanner: " + ex);
         	}
 	}
 	
-	private void takeSnapshot(String imageName, CallbackContext callbackContext) {
+	private void takeSnapshot(CallbackContext callbackContext) {
 		if (!initialized) {
 			callbackContext.error("Scanner not initialized; call initScanner first");
 		}
 		else {
 			try {
 				if (serverconnect) {
-					this.imageName = imageName;
-					mBarcodeManager.takeSnapshot(1, 8, 1, 100);
 					// void takeSnapshot(int subSampling, int bitPerPixel, int imageType, int jpegQuality);
 					// Parameters
 					// int subSampling: 1, 2, 4, 8
 					// int bitPerPixel: 1, 4, 8, 10
 					// int imageType: Jpeg(1), Bmp(3) int jpegQuality: 5~100 (%)
+					mBarcodeManager.takeSnapshot(1, 8, 1, 100);
 
 					// callbackContext.success("Snapshot taken");
+					// save context for onImgBuffer result
 					myCallBack = callbackContext;
+				}
+				else {
+					callbackContext.error("Scanner disconnected");
 				}
 			} catch (Exception e) {
 				callbackContext.error("Something went wrong with takeSnapshot: " + e);
@@ -281,7 +268,11 @@ public class OpticonPlugin extends CordovaPlugin {
 				if (serverconnect) {
 					mBarcodeManager.startDecode();
 					// callbackContext.success("Decode started");
+					// save context for onReadData/onStop result
 					myCallBack = callbackContext;
+				}
+				else {
+					callbackContext.error("Scanner disconnected");
 				}
 			} catch (Exception e) {
             			callbackContext.error("Something went wrong with startDecode: " + e);
@@ -299,6 +290,9 @@ public class OpticonPlugin extends CordovaPlugin {
 					mBarcodeManager.stopDecode();
 					callbackContext.success("Decode stopped");
 				}
+				else {
+					callbackContext.error("Scanner disconnected");
+				}
 			} catch (Exception e) {
             			callbackContext.error("Something went wrong with stopDecode: " + e);
 			}
@@ -314,6 +308,9 @@ public class OpticonPlugin extends CordovaPlugin {
 				if (serverconnect) {
 					mBarcodeManager.startTrigger();
 					callbackContext.success("Trigger started");
+				}
+				else {
+					callbackContext.error("Scanner disconnected");
 				}
 			} catch (Exception e) {
             			callbackContext.error("Something went wrong with startTrigger: " + e);
@@ -331,8 +328,11 @@ public class OpticonPlugin extends CordovaPlugin {
 					mBarcodeManager.stopTrigger();
 					callbackContext.success("Trigger stopped");
 				}
+				else {
+					callbackContext.error("Scanner disconnected");
+				}
 			} catch (Exception e) {
-            	callbackContext.error("Something went wrong with stopTrigger: " + e);
+		            	callbackContext.error("Something went wrong with stopTrigger: " + e);
 			}
 		}
 	}
@@ -341,30 +341,31 @@ public class OpticonPlugin extends CordovaPlugin {
 		try {
 			if (serverconnect) {
 				callbackContext.success(1);
-            }
+            		}
 			else {
 				callbackContext.success(0);
 			}
 		}
-		catch (Exception ex) {
-			callbackContext.error("Something went wrong with isConnected: " + ex);
+		catch (Exception e) {
+			callbackContext.error("Something went wrong with isConnected: " + e);
 		}
 	}
 
 	private void echo(String message, CallbackContext callbackContext) {
+		/*
 		this.cordova.getActivity().runOnUiThread(new Runnable() {
 			    @Override
 			    public void run() {
 				webView.loadUrl("javascript:console.log('----------------------- ECHO FIRED -----------------------');");
 			    }
 			});
-		
+		*/
 		if (message != null && message.length() > 0) {
 			try {
-				callbackContext.success("Ciao, " + message);
+				callbackContext.success("Hello, " + message);
 			    }
-			    catch (Exception ex) {
-				callbackContext.error("Something went wrong: " + ex);
+			    catch (Exception e) {
+				callbackContext.error("Something went wrong: " + e);
 			    }
 		} 
 		else {
@@ -376,49 +377,49 @@ public class OpticonPlugin extends CordovaPlugin {
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		this.callbackContext = callbackContext;
 		if (action.equals("echo")) {
+			Log.e(TAG, "echo called");
 			String message = args.getString(0);
 			this.echo(message, callbackContext);
 			return true;
 		}
 		if (action.equals("initOpticon")) {
-			this.initScanner(callbackContext);
 			Log.e(TAG, "Initialised opticon handscanner API");
+			this.initScanner(callbackContext);
 			return true;
 		}
 		if (action.equals("deinitOpticon")) {
-			this.deinitScanner(callbackContext);
 			Log.e(TAG, "Deinitialised opticon handscanner API");
+			this.deinitScanner(callbackContext);
 			return true;
 		}
 		if (action.equals("takeSnapshot")) {
-			String imageName = args.getString(0);
-			this.takeSnapshot(imageName, callbackContext);
 			Log.e(TAG, "takeSnapshot called");
+			this.takeSnapshot(callbackContext);
 			return true;
 		}
 		if (action.equals("startDecode")) {
-			this.startDecode(callbackContext);
 			Log.e(TAG, "startDecode called");
+			this.startDecode(callbackContext);
 			return true;
 		}
 		if (action.equals("stopDecode")) {
-			this.stopDecode(callbackContext);
 			Log.e(TAG, "stopDecode called");
+			this.stopDecode(callbackContext);
 			return true;
 		}
 		if (action.equals("startTrigger")) {
-			this.startTrigger(callbackContext);
 			Log.e(TAG, "startTrigger called");
+			this.startTrigger(callbackContext);
 			return true;
 		}
 		if (action.equals("stopTrigger")) {
-			this.stopTrigger(callbackContext);
 			Log.e(TAG, "stopTrigger called");
+			this.stopTrigger(callbackContext);
 			return true;
 		}
 		if (action.equals("isConnected")) {
-			this.isConnected(callbackContext);
 			Log.e(TAG, "isConnected called");
+			this.isConnected(callbackContext);
 			return true;
 		}
 		return false;
