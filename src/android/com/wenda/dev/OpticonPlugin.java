@@ -139,7 +139,7 @@ public class OpticonPlugin extends CordovaPlugin {
 				@Override
 				public void onStop(){
 					Log.i(TAG, "ON STOP");
-					
+					/*
 					if (myCallBack != null) {
 						// send timeout error for startDecode
 						Log.i(TAG, ">>> myCallBack <<<");
@@ -149,10 +149,11 @@ public class OpticonPlugin extends CordovaPlugin {
 						myCallBack = null;
 					}
 					else {
+					*/
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"event\": \"onStop\"}");
 						pluginResult.setKeepCallback(true);
 						callbackContext.sendPluginResult(pluginResult);
-					}
+					//}
 				}
 
 				@Override
